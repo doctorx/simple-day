@@ -1,15 +1,24 @@
-from typing import Union
+from uuid import UUID
 
 from fastapi import FastAPI
+
+from src.simple_day.service import get_user_by_id, list_users, add_user
+from src.simple_day.model import UserReq, ActionReq
 
 app = FastAPI()
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+@app.get("/user/{user_uuid}")
+def get_user(user_uuid: UUID):
+    return get_user_by_id(user_uuid)
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/user/list")
+def list_user():
+    return list_users()
+
+@app.post("/user")
+def create_user(user: UserReq):
+    return add_user(user)
+
+
