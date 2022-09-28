@@ -1,32 +1,20 @@
-from typing import Dict
-from uuid import UUID, uuid4
+from typing import Dict, Any
+from uuid import UUID
 
-from src.simple_day.model import UserReq, ActionReq
-
-USERS = [UserReq(**{
-                "id": "651c2476-1990-11ed-861d-0242ac120002", 
-                "name": "Bob",
-                "active": True
-            }),
-        UserReq(**{ 
-                "id":"93a60546-1990-11ed-861d-0242ac120002",
-                "name": "Jane",
-                "active": False
-            })
-    ]       
-
-def get_user_by_id(user_uuid: UUID) -> UserReq:
-    for user in USERS:
-        if user.id == user_uuid:
-            return user
-
-def add_user(user_model: UserReq) -> bool:
-    user_model.id = str(uuid4())
-    USERS.append(user_model)
-
-def list_users() -> Dict:
-    return USERS
+from src.simple_day.schema import SimpleHabit as SimpleHabitScheme
+from src.simple_day.model import SimpleHabit as SimpleHabitModel
 
 
-def get_action_by_id(action_uuid: UUID) -> ActionReq:
+def get_habit_by_user(user_uuid: UUID) -> SimpleHabitScheme:
+    ...
+
+
+def add_habit(habit_model: SimpleHabitScheme) -> dict[str, Any]:
+    habit_dict = habit_model.dict()
+    habit_dict['user'] = str(habit_dict['user'])
+    simple = SimpleHabitModel(**habit_dict)
+    return simple.save()
+
+
+def get_habits() -> list[SimpleHabitScheme]:
     ...

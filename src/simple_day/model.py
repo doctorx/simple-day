@@ -1,17 +1,20 @@
-from datetime import datetime
-from uuid import UUID
-from pydantic import BaseModel
+from pynamodb.models import Model
+from pynamodb.attributes import UnicodeAttribute, UTCDateTimeAttribute, NumberAttribute, BooleanAttribute
+from .settings import Settings
 
-class UserReq(BaseModel):
-    id: UUID
-    name: str
-    active: bool
 
-class ActionReq(BaseModel):
-    id: UUID
-    name: str 
-    value: int | float
-    measurement: str
-    feel: int
-    created_date: datetime
-    user_uuid: UUID
+class SimpleHabit(Model):
+
+    class Meta:
+        table_name = 'simple-habit'
+        region = 'us-west-1'
+        host = Settings().DYNAMODB_URL
+
+    user = UnicodeAttribute(hash_key=True)
+    date = UTCDateTimeAttribute(range_key=True)
+    action = UnicodeAttribute()
+    entity = UnicodeAttribute()
+    measurement = UnicodeAttribute()
+    measurement_value = NumberAttribute()
+    feel = NumberAttribute()
+    complete = BooleanAttribute()
